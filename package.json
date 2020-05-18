@@ -4,6 +4,7 @@
   "license": "AGPL-3.0",
   "main": "src/index.js",
   "scripts": {
+    "build": "ncc build",
     "lint": "eslint src --ext js",
     "lint:fix": "eslint src --ext js --fix",
     "prettier": "prettier --check src/**/*.js",
@@ -18,5 +19,8 @@
     "@actions/exec": "^1.0.4",
     "@actions/io": "^1.0.2",
     "uuid": "^8.0.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.22.2"
   }
 }

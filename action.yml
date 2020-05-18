@@ -11,5 +11,5 @@ inputs:
     description: SSH key used to fetch the repository.
 runs:
   using: node12
-  main: src/index.js
+  main: dist/index.js
   # post: src/index.js
