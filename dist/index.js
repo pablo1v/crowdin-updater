@@ -639,6 +639,8 @@ module.exports = require("path");
 /***/ 676:
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
+const fs = __webpack_require__(747);
+const path = __webpack_require__(622);
 const core = __webpack_require__(470);
 
 const cloneTranslationRepository = __webpack_require__(944);
@@ -647,6 +649,8 @@ async function run() {
   const token = core.getInput('token');
   const repository = core.getInput('repository');
   const sshKkey = core.getInput('ssh-key');
+
+  console.log('folder', fs.readdirSync(path.resolve(__dirname, '..')).length);
 
   console.log({ token, repository, sshKkey });
 
@@ -703,6 +707,13 @@ function v4(options, buf, offset) {
 
 var _default = v4;
 exports.default = _default;
+
+/***/ }),
+
+/***/ 747:
+/***/ (function(module) {
+
+module.exports = require("fs");
 
 /***/ }),
 
