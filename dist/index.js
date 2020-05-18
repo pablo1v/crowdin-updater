@@ -650,7 +650,7 @@ async function run() {
   const repository = core.getInput('repository');
   const sshKkey = core.getInput('ssh-key');
 
-  console.log('folder', fs.readdirSync(path.resolve(__dirname, '..')));
+  console.log('folder', fs.readdirSync(path.resolve(__dirname, '..', '..')));
 
   // console.log({ token, repository, sshKkey });
 
