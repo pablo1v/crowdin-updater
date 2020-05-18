@@ -1,0 +1,22 @@
+{
+  "name": "crowdin-action",
+  "version": "1.0.0",
+  "license": "AGPL-3.0",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint src --ext js",
+    "lint:fix": "eslint src --ext js --fix",
+    "prettier": "prettier --check src/**/*.js",
+    "prettier:fix": "prettier --write src/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kaeltec/crowdin-action.git"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/exec": "^1.0.4",
+    "@actions/io": "^1.0.2",
+    "uuid": "^8.0.0"
+  }
+}

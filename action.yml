@@ -1,0 +1,15 @@
+name: Kael Crowdin Action
+description: An action that updates the translation repository based on the changes made to the Bot.
+inputs:
+  repository:
+    description: Repository name with owner.
+    default: ${{ github.repository }}
+  token:
+    description: Personal access token (PAT) used to fetch the repository.
+    default: ${{ github.token }}
+  ssh-key:
+    description: SSH key used to fetch the repository.
+runs:
+  using: node12
+  main: src/index.js
+  post: src/index.js
