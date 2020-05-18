@@ -21,6 +21,7 @@
     "uuid": "^8.0.0"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.22.2"
+    "@zeit/ncc": "^0.22.2",
+    "husky": "^4.2.5"
   }
 }

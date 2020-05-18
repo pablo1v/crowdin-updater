@@ -652,7 +652,7 @@ async function run() {
 
   console.log('folder', fs.readdirSync(path.resolve(__dirname, '..')).length);
 
-  console.log({ token, repository, sshKkey });
+  // console.log({ token, repository, sshKkey });
 
   // const { cloneUniqueID, clonePath } = await cloneTranslationRepository();
   // console.log({ cloneUniqueID, clonePath });
