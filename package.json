@@ -19,5 +19,8 @@
     "@actions/exec": "^1.0.4",
     "@actions/io": "^1.0.2",
     "uuid": "^8.0.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.22.2"
   }
 }
