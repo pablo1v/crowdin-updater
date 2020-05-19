@@ -6,7 +6,7 @@ const { validateDir, validateFile } = require('.');
 
 function addSSHKey(key) {
   const sshDir = join(process.env.HOME || __dirname, '.ssh');
-  const filePath = join(sshDir, 'deploy_key.pub');
+  const filePath = join(sshDir, 'deploy_key');
 
   validateDir(sshDir);
   validateFile(`${sshDir}/known_hosts`);
