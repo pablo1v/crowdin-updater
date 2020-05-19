@@ -12,7 +12,7 @@ async function addSSHKey(key) {
 
   console.log('passou');
 
-  await exec.exec('ssh-agent', ['bash']);
+  await exec.exec('ssh-agent');
   await exec.exec('ssh-add', ['-K', sshPath]);
 }
 
