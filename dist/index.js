@@ -1118,7 +1118,7 @@ function _default(name, version, hashfunc) {
 const fs = __webpack_require__(747);
 const path = __webpack_require__(622);
 
-const { DIR_PATH } = __webpack_require__(542);
+const { DIR_PATH } = __webpack_require__(387);
 
 const resolvePath = (...paths) => path.resolve(...paths);
 const isDirectory = path => fs.lstatSync(path).isDirectory();
@@ -1181,6 +1181,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const v5 = (0, _v.default)('v5', 0x50, _sha.default);
 var _default = v5;
 exports.default = _default;
+
+/***/ }),
+
+/***/ 387:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { resolve } = __webpack_require__(622);
+
+module.exports = {
+  DIR_PATH: resolve(__dirname, '..', '..', '..', '..', '..'),
+};
+
 
 /***/ }),
 
@@ -1582,18 +1594,6 @@ exports.default = _default;
 
 /***/ }),
 
-/***/ 542:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { resolve } = __webpack_require__(622);
-
-module.exports = {
-  DIR_PATH: resolve(__dirname, '..', '..', '..', '..', '..'),
-};
-
-
-/***/ }),
-
 /***/ 614:
 /***/ (function(module) {
 
@@ -1825,6 +1825,7 @@ const exec = __webpack_require__(986);
 const core = __webpack_require__(470);
 
 const { isDirectory, resolvePath } = __webpack_require__(353);
+const { DIR_PATH } = __webpack_require__(387);
 const cloneTranslationRepository = __webpack_require__(944);
 
 async function run() {

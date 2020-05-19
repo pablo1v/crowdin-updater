@@ -3,6 +3,7 @@ const exec = require('@actions/exec');
 const core = require('@actions/core');
 
 const { isDirectory, resolvePath } = require('./utils');
+const { DIR_PATH } = require('./utils/constants');
 const cloneTranslationRepository = require('./clone');
 
 async function run() {

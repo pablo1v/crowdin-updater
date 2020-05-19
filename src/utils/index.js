@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { DIR_PATH } = require('./Constants');
+const { DIR_PATH } = require('./constants');
 
 const resolvePath = (...paths) => path.resolve(...paths);
 const isDirectory = path => fs.lstatSync(path).isDirectory();
