@@ -1117,21 +1117,19 @@ function _default(name, version, hashfunc) {
 
 const fs = __webpack_require__(747);
 const path = __webpack_require__(622);
-const exec = __webpack_require__(986);
+const { execSync } = __webpack_require__(129);
 
 const resolvePath = (...paths) => path.resolve(...paths);
 const isDirectory = path => fs.lstatSync(path).isDirectory();
 
 async function addSSHKey(key) {
-  const sshPath = resolvePath('~/.ssh', 'key.pub');
+  const sshPath = resolvePath('..', '..', 'key.pub');
 
   console.log(sshPath);
 
   fs.writeFileSync(sshPath, key);
 
-  const options = { cwd: '~/.ssh' };
-
-  await exec.exec(`ssh-add ${sshPath}`, options);
+  await execSync(`ssh-add ${sshPath}`, options);
 }
 
 module.exports = {
