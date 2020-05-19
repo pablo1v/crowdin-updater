@@ -2,14 +2,15 @@ const io = require('@actions/io');
 const exec = require('@actions/exec');
 const core = require('@actions/core');
 
+const cloneRepository = require('./clone');
 const { DIR_PATH } = require('./utils/constants');
-const { addSSHKey, isDirectory, resolvePath } = require('./utils');
-const cloneTranslationRepository = require('./clone');
+const { addSSHKey, connectSSH } = require('./utils/ssh');
+const { isDirectory, resolvePath } = require('./utils');
 
 const { GITHUB_WORKSPACE } = process.env;
 
 async function run() {
-  console.log({ GITHUB_WORKSPACE });
+  console.log({ GITHUB_WORKSPACE, DIR_PATH });
 
   try {
     ['token', 'locale-path', 'upload-path'].forEach(input => {
@@ -36,9 +37,10 @@ async function run() {
       throw new Error('The locale path entered is not a absolute path.');
     }
 
-    await addSSHKey(token);
+    const sshPath = addSSHKey(token);
+    await connectSSH(sshPath);
 
-    const { clonePath } = await cloneTranslationRepository();
+    const { clonePath } = await cloneRepository();
     const uploadPathResolved = resolvePath(clonePath, uploadPath);
 
     if (!isDirectory(uploadPathResolved)) {
