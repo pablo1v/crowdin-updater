@@ -4,17 +4,15 @@ inputs:
   repository:
     description: Repository name with owner.
     default: ${{ github.repository }}
-  token:
-    description: Personal access token (PAT) used to fetch the repository.
-    required: true
   locale-path:
     description: Path.
     required: true
   upload-path:
     description: Path.
     required: true
-  ssh-key:
-    description: SSH key used to fetch the repository.
+  token:
+    description: Personal access token.
+    required: true
 runs:
   using: node12
   main: dist/index.js

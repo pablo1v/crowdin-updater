@@ -9,8 +9,11 @@ const cloneTranslationRepository = require('./clone');
 async function run() {
   const token = core.getInput('token');
 
-  const repository = core.getInput('repository');
+  if (!token) {
+    throw new Error('No ssh-key was provided.');
+  }
 
+  const repository = core.getInput('repository');
   const localePath = core.getInput('locale-path');
   const uploadPath = core.getInput('upload-path');
 
@@ -35,7 +38,6 @@ async function run() {
     throw new Error('The upload path entered is not a absolute path.');
   }
 
-  // await io.rmRF(uploadPathResolved);
   await io.cp(localePathResolved, uploadPathResolved, {
     recursive: true,
     force: true,
@@ -48,6 +50,8 @@ async function run() {
   //   ['-t rsa', '-b', '4096', '-C "your_email@example.com'],
   //   options,
   // );
+
+  await exec.exec('export ', [`GITHUB_TOKEN=${token}`], options);
 
   await exec.exec('git', ['config', 'user.name', '"Example"'], options);
   await exec.exec(
