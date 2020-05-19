@@ -7,6 +7,9 @@ inputs:
   token:
     description: Personal access token (PAT) used to fetch the repository.
     default: ${{ github.token }}
+  locale-path:
+    description: SSH key used to fetch the repository.
+    default: src/locales/base
   ssh-key:
     description: SSH key used to fetch the repository.
 runs:

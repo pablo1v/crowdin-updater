@@ -208,6 +208,41 @@ function _default(name, version, hashfunc) {
 
 /***/ }),
 
+/***/ 353:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const fs = __webpack_require__(747);
+const path = __webpack_require__(622);
+
+const { DIR_PATH } = __webpack_require__(542);
+
+const resolvePath = (...paths) => path.resolve(...paths);
+
+function readdir(directory) {
+  const directoryPath = resolvePath(DIR_PATH, directory);
+  const files = fs.readdirSync(directoryPath);
+
+  return files
+    .map(file => {
+      const fileFullPath = resolvePath(directoryPath, file);
+
+      if (/\.json$/.test(file)) {
+        return require(fileFullPath);
+      }
+
+      return false;
+    })
+    .filter(_module => _module);
+}
+
+module.exports = {
+  resolvePath,
+  readdir,
+};
+
+
+/***/ }),
+
 /***/ 384:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -629,6 +664,18 @@ exports.default = _default;
 
 /***/ }),
 
+/***/ 542:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const { resolve } = __webpack_require__(622);
+
+module.exports = {
+  DIR_PATH: resolve(__dirname, '..', '..', '..', '..', '..'),
+};
+
+
+/***/ }),
+
 /***/ 622:
 /***/ (function(module) {
 
@@ -643,22 +690,23 @@ const fs = __webpack_require__(747);
 const path = __webpack_require__(622);
 const core = __webpack_require__(470);
 
+const { readdir } = __webpack_require__(353);
 const cloneTranslationRepository = __webpack_require__(944);
 
 async function run() {
   const token = core.getInput('token');
   const repository = core.getInput('repository');
   const sshKkey = core.getInput('ssh-key');
+  const localePath = core.getInput('locale-path');
 
-  console.log(
-    'folder',
-    fs.readdirSync(path.resolve(__dirname, '..', '..', '..', '..')),
-  );
+  console.log(repository);
 
-  // console.log({ token, repository, sshKkey });
+  const localefiles = readdir(`${repository}/${localePath}`);
+
+  console.log(localefiles);
+  console.log({ repository, localePath });
 
   // const { cloneUniqueID, clonePath } = await cloneTranslationRepository();
-  // console.log({ cloneUniqueID, clonePath });
 }
 
 run();
