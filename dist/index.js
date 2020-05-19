@@ -219,7 +219,12 @@ const { DIR_PATH } = __webpack_require__(542);
 const resolvePath = (...paths) => path.resolve(...paths);
 
 function readdirFiles(repositoryName, localePath) {
-  const directoryPath = resolvePath(DIR_PATH, repositoryName, localePath);
+  const directoryPath = resolvePath(
+    DIR_PATH,
+    repositoryName,
+    repositoryName,
+    localePath,
+  );
 
   return fs
     .readdirSync(directoryPath)
