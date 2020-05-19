@@ -10,12 +10,13 @@ async function run() {
   try {
     console.log({ token: core.getInput('token') });
 
-    ['token', 'localePath', 'uploadPath'].forEach(input => {
+    ['token', 'locale-path', 'upload-path'].forEach(input => {
       if (!core.getInput(input)) throw new Error(`No ${input} was provided.`);
     });
 
-    const token = core.getInput('token');
     const repository = core.getInput('repository');
+    const token = core.getInput('token');
+
     const localePath = core.getInput('locale-path');
     const uploadPath = core.getInput('upload-path');
 
