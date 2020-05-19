@@ -16,7 +16,11 @@ async function run() {
   const repositoryName = repo || owner;
 
   console.log(DIR_PATH);
+  console.log(fs.readdirSync(path.resolve(DIR_PATH)));
   console.log(fs.readdirSync(path.resolve(DIR_PATH, repositoryName)));
+  console.log(
+    fs.readdirSync(path.resolve(DIR_PATH, repositoryName, repositoryName)),
+  );
 
   // const localefiles = readdirFiles(repositoryName, localePath);
 
