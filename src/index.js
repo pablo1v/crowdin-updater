@@ -3,6 +3,7 @@ const path = require('path');
 const core = require('@actions/core');
 
 const { readdirFiles } = require('./utils');
+const { DIR_PATH } = require('./utils/Constants');
 const cloneTranslationRepository = require('./clone');
 
 async function run() {
@@ -14,10 +15,13 @@ async function run() {
   const [owner, repo] = repository.split(/\//g);
   const repositoryName = repo || owner;
 
-  const localefiles = readdirFiles(repositoryName, localePath);
+  console.log(DIR_PATH);
+  console.log(fs.readdirSync(path.resolve(DIR_PATH, repositoryName)));
 
-  console.log(localefiles);
-  console.log({ repository, localePath });
+  // const localefiles = readdirFiles(repositoryName, localePath);
+
+  // console.log(localefiles);
+  // console.log({ repository, localePath });
 
   // const { cloneUniqueID, clonePath } = await cloneTranslationRepository();
 }

@@ -670,7 +670,7 @@ exports.default = _default;
 const { resolve } = __webpack_require__(622);
 
 module.exports = {
-  DIR_PATH: resolve(__dirname, '..', '..', '..', '..', '..', '..'),
+  DIR_PATH: resolve(__dirname, '..', '..', '..', '..', '..'),
 };
 
 
@@ -691,6 +691,7 @@ const path = __webpack_require__(622);
 const core = __webpack_require__(470);
 
 const { readdirFiles } = __webpack_require__(353);
+const { DIR_PATH } = __webpack_require__(542);
 const cloneTranslationRepository = __webpack_require__(944);
 
 async function run() {
@@ -702,10 +703,13 @@ async function run() {
   const [owner, repo] = repository.split(/\//g);
   const repositoryName = repo || owner;
 
-  const localefiles = readdirFiles(repositoryName, localePath);
+  console.log(DIR_PATH);
+  console.log(fs.readdirSync(path.resolve(DIR_PATH, repositoryName)));
 
-  console.log(localefiles);
-  console.log({ repository, localePath });
+  // const localefiles = readdirFiles(repositoryName, localePath);
+
+  // console.log(localefiles);
+  // console.log({ repository, localePath });
 
   // const { cloneUniqueID, clonePath } = await cloneTranslationRepository();
 }
