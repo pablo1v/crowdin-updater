@@ -11,15 +11,17 @@ async function run() {
   const sshKkey = core.getInput('ssh-key');
   const localePath = core.getInput('locale-path');
 
-  console.log(fs.readdirSync(path.resolve(__dirname, '..', '..', '..', '..')));
+  console.log(
+    fs.readdirSync(path.resolve(__dirname, '..', '..', '..', '..', '..')),
+  );
 
   const [owner, repo] = repository.split(/\//g);
 
   console.log({ owner, repo });
 
-  const localefiles = readdir(`${repository}/${repo}`);
+  // const localefiles = readdir(`${repository}/${repo}`);
 
-  console.log(localefiles);
+  // console.log(localefiles);
   console.log({ repository, localePath });
 
   // const { cloneUniqueID, clonePath } = await cloneTranslationRepository();
