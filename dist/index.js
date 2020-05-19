@@ -1127,7 +1127,7 @@ async function addSSHKey(key) {
 
   fs.writeFileSync(sshPath, key, { encoding: 'utf-8' });
 
-  await exec.exec('ssh-add', sshPath);
+  await exec.exec('ssh-add', [sshPath]);
 }
 
 module.exports = {
