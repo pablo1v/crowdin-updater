@@ -218,11 +218,11 @@ const { DIR_PATH } = __webpack_require__(542);
 
 const resolvePath = (...paths) => path.resolve(...paths);
 
-function readdir(directory) {
-  const directoryPath = resolvePath(DIR_PATH, directory);
-  const files = fs.readdirSync(directoryPath);
+function readdirFiles(repositoryName, localePath) {
+  const directoryPath = resolvePath(DIR_PATH, repositoryName, localePath);
 
-  return files
+  return fs
+    .readdirSync(directoryPath)
     .map(file => {
       const fileFullPath = resolvePath(directoryPath, file);
 
@@ -237,7 +237,7 @@ function readdir(directory) {
 
 module.exports = {
   resolvePath,
-  readdir,
+  readdirFiles,
 };
 
 
@@ -670,7 +670,7 @@ exports.default = _default;
 const { resolve } = __webpack_require__(622);
 
 module.exports = {
-  DIR_PATH: resolve(__dirname, '..', '..', '..', '..', '..'),
+  DIR_PATH: resolve(__dirname, '..', '..', '..', '..', '..', '..'),
 };
 
 
@@ -690,7 +690,7 @@ const fs = __webpack_require__(747);
 const path = __webpack_require__(622);
 const core = __webpack_require__(470);
 
-const { readdir } = __webpack_require__(353);
+const { readdirFiles } = __webpack_require__(353);
 const cloneTranslationRepository = __webpack_require__(944);
 
 async function run() {
@@ -699,17 +699,12 @@ async function run() {
   const sshKkey = core.getInput('ssh-key');
   const localePath = core.getInput('locale-path');
 
-  console.log(
-    fs.readdirSync(path.resolve(__dirname, '..', '..', '..', '..', '..')),
-  );
-
   const [owner, repo] = repository.split(/\//g);
+  const repositoryName = repo || owner;
 
-  console.log({ owner, repo });
+  const localefiles = readdirFiles(repositoryName, localePath);
 
-  // const localefiles = readdir(`${repository}/${repo}`);
-
-  // console.log(localefiles);
+  console.log(localefiles);
   console.log({ repository, localePath });
 
   // const { cloneUniqueID, clonePath } = await cloneTranslationRepository();

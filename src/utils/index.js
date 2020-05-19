@@ -5,11 +5,11 @@ const { DIR_PATH } = require('./Constants');
 
 const resolvePath = (...paths) => path.resolve(...paths);
 
-function readdir(directory) {
-  const directoryPath = resolvePath(DIR_PATH, directory);
-  const files = fs.readdirSync(directoryPath);
+function readdirFiles(repositoryName, localePath) {
+  const directoryPath = resolvePath(DIR_PATH, repositoryName, localePath);
 
-  return files
+  return fs
+    .readdirSync(directoryPath)
     .map(file => {
       const fileFullPath = resolvePath(directoryPath, file);
 
@@ -24,5 +24,5 @@ function readdir(directory) {
 
 module.exports = {
   resolvePath,
-  readdir,
+  readdirFiles,
 };

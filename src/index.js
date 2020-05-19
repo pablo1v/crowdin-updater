@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const core = require('@actions/core');
 
-const { readdir } = require('./utils');
+const { readdirFiles } = require('./utils');
 const cloneTranslationRepository = require('./clone');
 
 async function run() {
@@ -11,17 +11,12 @@ async function run() {
   const sshKkey = core.getInput('ssh-key');
   const localePath = core.getInput('locale-path');
 
-  console.log(
-    fs.readdirSync(path.resolve(__dirname, '..', '..', '..', '..', '..')),
-  );
-
   const [owner, repo] = repository.split(/\//g);
+  const repositoryName = repo || owner;
 
-  console.log({ owner, repo });
+  const localefiles = readdirFiles(repositoryName, localePath);
 
-  // const localefiles = readdir(`${repository}/${repo}`);
-
-  // console.log(localefiles);
+  console.log(localefiles);
   console.log({ repository, localePath });
 
   // const { cloneUniqueID, clonePath } = await cloneTranslationRepository();
