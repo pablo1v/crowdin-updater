@@ -12,6 +12,7 @@ async function addSSHKey(key) {
 
   fs.writeFileSync(sshPath, key);
 
+  await execSync('ssh-agent -s');
   await execSync(`ssh-add ${sshPath}`);
 }
 
