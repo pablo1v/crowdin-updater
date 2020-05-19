@@ -1115,27 +1115,49 @@ function _default(name, version, hashfunc) {
 /***/ 353:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const fs = __webpack_require__(747);
-const path = __webpack_require__(622);
-const { execSync } = __webpack_require__(129);
+const { resolve, join } = __webpack_require__(622);
+const { lstatSync, existsSync, mkdirSync, writeFileSync } = __webpack_require__(747);
 
-const resolvePath = (...paths) => path.resolve(...paths);
-const isDirectory = path => fs.lstatSync(path).isDirectory();
+const { HOME } = process.env;
 
-async function addSSHKey(key) {
-  const sshPath = resolvePath('..', '..', 'key.pub');
+const resolvePath = (...paths) => resolve(...paths);
+const isDirectory = path => lstatSync(path).isDirectory();
+const validateDir = directory => !existsSync(directory) && mkdirSync(directory);
 
-  console.log(sshPath);
+function validateFile(filePath) {
+  if (!existsSync(filePath)) {
+    writeFileSync(filePath, '', {
+      encoding: 'utf8',
+      mode: 0o600,
+    });
+  }
+}
 
-  fs.writeFileSync(sshPath, key);
+function addSSHKey(key) {
+  console.log('HOME', HOME);
 
-  await execSync('ssh-agent -s');
-  await execSync(`ssh-add ${sshPath}`);
+  const sshDir = join(HOME || __dirname, '.ssh');
+  const filePath = join(sshDir, 'deploy_key');
+
+  validateDir(sshDir);
+  validateFile(`${sshDir}/known_hosts`);
+
+  writeFileSync(filePath, key, {
+    encoding: 'utf8',
+    mode: 0o600,
+  });
+
+  return filePath;
+
+  // await execSync('ssh-agent -s');
+  // await execSync(`ssh-add ${sshPath}`);
 }
 
 module.exports = {
   resolvePath,
   isDirectory,
+  validateDir,
+  validateFile,
   addSSHKey,
 };
 
@@ -1812,11 +1834,15 @@ const io = __webpack_require__(1);
 const exec = __webpack_require__(986);
 const core = __webpack_require__(470);
 
-const { addSSHKey, isDirectory, resolvePath } = __webpack_require__(353);
 const { DIR_PATH } = __webpack_require__(387);
+const { addSSHKey, isDirectory, resolvePath } = __webpack_require__(353);
 const cloneTranslationRepository = __webpack_require__(944);
 
+const { GITHUB_WORKSPACE } = process.env;
+
 async function run() {
+  console.log({ GITHUB_WORKSPACE });
+
   try {
     ['token', 'locale-path', 'upload-path'].forEach(input => {
       if (!core.getInput(input)) throw new Error(`No ${input} was provided.`);
@@ -2110,7 +2136,7 @@ async function cloneTranslationRepository() {
   const clonePath = path.resolve(__dirname, '..', cloneUniqueID);
 
   await execSync(
-    `git clone https://github.com/Kaeltec/localization.git ${clonePath}`,
+    `git clone https://github.com/Kaeltec/localization.git${clonePath}`,
     {
       cwd: path.resolve(__dirname, '..'),
     },

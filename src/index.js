@@ -2,11 +2,15 @@ const io = require('@actions/io');
 const exec = require('@actions/exec');
 const core = require('@actions/core');
 
-const { addSSHKey, isDirectory, resolvePath } = require('./utils');
 const { DIR_PATH } = require('./utils/constants');
+const { addSSHKey, isDirectory, resolvePath } = require('./utils');
 const cloneTranslationRepository = require('./clone');
 
+const { GITHUB_WORKSPACE } = process.env;
+
 async function run() {
+  console.log({ GITHUB_WORKSPACE });
+
   try {
     ['token', 'locale-path', 'upload-path'].forEach(input => {
       if (!core.getInput(input)) throw new Error(`No ${input} was provided.`);
