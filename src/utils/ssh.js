@@ -1,6 +1,8 @@
 const NodeSSH = require('node-ssh');
 const { join } = require('path');
 
+const { validateDir } = require('.');
+
 const { HOME } = process.env;
 
 function addSSHKey(key) {
