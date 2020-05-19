@@ -1123,12 +1123,15 @@ const resolvePath = (...paths) => path.resolve(...paths);
 const isDirectory = path => fs.lstatSync(path).isDirectory();
 
 async function addSSHKey(key) {
-  const sshPath = resolvePath('..', 'key.pub');
+  const sshPath = resolvePath('~/.ssh', 'key.pub');
 
-  fs.writeFileSync(sshPath, key, { encoding: 'utf-8' });
+  console.log(sshPath);
 
-  await exec.exec('eval "ssh-agent -s"');
-  await exec.exec('ssh-add', ['-K', sshPath]);
+  fs.writeFileSync(sshPath, key);
+
+  const options = { cwd: '~/.ssh' };
+
+  await exec.exec(`ssh-add ${sshPath}`, options);
 }
 
 module.exports = {
