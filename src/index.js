@@ -11,9 +11,13 @@ async function run() {
   const sshKkey = core.getInput('ssh-key');
   const localePath = core.getInput('locale-path');
 
-  console.log(repository);
+  console.log(fs.readdirSync(path.resolve(__dirname, '..', '..', '..', '..')));
 
-  const localefiles = readdir(`${repository}/${localePath}`);
+  const [owner, repo] = repository.split(/\//g);
+
+  console.log({ owner, repo });
+
+  const localefiles = readdir(`${repository}/${repo}`);
 
   console.log(localefiles);
   console.log({ repository, localePath });
