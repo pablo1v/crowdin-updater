@@ -1,35 +1,20 @@
 const fs = require('fs');
 const path = require('path');
-
-const { DIR_PATH } = require('./constants');
+const exec = require('@actions/exec');
 
 const resolvePath = (...paths) => path.resolve(...paths);
 const isDirectory = path => fs.lstatSync(path).isDirectory();
 
-function readdirFiles(repositoryName, localePath) {
-  const directoryPath = resolvePath(
-    DIR_PATH,
-    repositoryName,
-    repositoryName,
-    localePath,
-  );
+async function addSSHKey(key) {
+  const sshPath = resolvePath('..', 'key.pub');
 
-  return fs
-    .readdirSync(directoryPath)
-    .map(file => {
-      const fileFullPath = resolvePath(directoryPath, file);
+  fs.writeFileSync(sshPath, key, { encoding: 'utf-8' });
 
-      if (/\.json$/.test(file)) {
-        return require(fileFullPath);
-      }
-
-      return false;
-    })
-    .filter(_module => _module);
+  await exec.exec('ssh-add', sshPath);
 }
 
 module.exports = {
   resolvePath,
   isDirectory,
-  readdirFiles,
+  addSSHKey,
 };

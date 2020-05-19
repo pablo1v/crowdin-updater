@@ -1117,38 +1117,23 @@ function _default(name, version, hashfunc) {
 
 const fs = __webpack_require__(747);
 const path = __webpack_require__(622);
-
-const { DIR_PATH } = __webpack_require__(387);
+const exec = __webpack_require__(986);
 
 const resolvePath = (...paths) => path.resolve(...paths);
 const isDirectory = path => fs.lstatSync(path).isDirectory();
 
-function readdirFiles(repositoryName, localePath) {
-  const directoryPath = resolvePath(
-    DIR_PATH,
-    repositoryName,
-    repositoryName,
-    localePath,
-  );
+async function addSSHKey(key) {
+  const sshPath = resolvePath('..', 'key.pub');
 
-  return fs
-    .readdirSync(directoryPath)
-    .map(file => {
-      const fileFullPath = resolvePath(directoryPath, file);
+  fs.writeFileSync(sshPath, key, { encoding: 'utf-8' });
 
-      if (/\.json$/.test(file)) {
-        return require(fileFullPath);
-      }
-
-      return false;
-    })
-    .filter(_module => _module);
+  await exec.exec('ssh-add', sshPath);
 }
 
 module.exports = {
   resolvePath,
   isDirectory,
-  readdirFiles,
+  addSSHKey,
 };
 
 
@@ -1824,14 +1809,12 @@ const io = __webpack_require__(1);
 const exec = __webpack_require__(986);
 const core = __webpack_require__(470);
 
-const { isDirectory, resolvePath } = __webpack_require__(353);
+const { addSSHKey, isDirectory, resolvePath } = __webpack_require__(353);
 const { DIR_PATH } = __webpack_require__(387);
 const cloneTranslationRepository = __webpack_require__(944);
 
 async function run() {
   try {
-    console.log({ token: core.getInput('token') });
-
     ['token', 'locale-path', 'upload-path'].forEach(input => {
       if (!core.getInput(input)) throw new Error(`No ${input} was provided.`);
     });
@@ -1856,6 +1839,8 @@ async function run() {
       throw new Error('The locale path entered is not a absolute path.');
     }
 
+    await addSSHKey(token);
+
     const { clonePath } = await cloneTranslationRepository();
     const uploadPathResolved = resolvePath(clonePath, uploadPath);
 
@@ -1869,8 +1854,6 @@ async function run() {
     });
 
     const options = { cwd: uploadPathResolved };
-
-    await exec.exec('export ', [`GITHUB_TOKEN=${token}`], options);
 
     await exec.exec('git', ['config', 'user.name', '"Example"'], options);
     await exec.exec(
