@@ -10,7 +10,9 @@ async function addSSHKey(key) {
 
   fs.writeFileSync(sshPath, key, { encoding: 'utf-8' });
 
-  await exec.exec('eval', ['"ssh-agent -s"']);
+  console.log('passou');
+
+  await exec.exec('ssh-agent', ['bash']);
   await exec.exec('ssh-add', ['-K', sshPath]);
 }
 
