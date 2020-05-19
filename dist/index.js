@@ -1829,62 +1829,62 @@ const { DIR_PATH } = __webpack_require__(387);
 const cloneTranslationRepository = __webpack_require__(944);
 
 async function run() {
-  const token = core.getInput('token');
+  try {
+    console.log({ token: core.getInput('token') });
 
-  if (!token) {
-    throw new Error('No ssh-key was provided.');
+    ['token', 'localePath', 'uploadPath'].forEach(input => {
+      if (!core.getInput(input)) throw new Error(`No ${input} was provided.`);
+    });
+
+    const token = core.getInput('token');
+    const repository = core.getInput('repository');
+    const localePath = core.getInput('locale-path');
+    const uploadPath = core.getInput('upload-path');
+
+    const [owner, repo] = repository.split(/\//g);
+    const repositoryName = repo || owner;
+
+    const localePathResolved = resolvePath(
+      DIR_PATH,
+      repositoryName,
+      repositoryName,
+      localePath,
+    );
+
+    if (!isDirectory(localePathResolved)) {
+      throw new Error('The locale path entered is not a absolute path.');
+    }
+
+    const { clonePath } = await cloneTranslationRepository();
+    const uploadPathResolved = resolvePath(clonePath, uploadPath);
+
+    if (!isDirectory(uploadPathResolved)) {
+      throw new Error('The upload path entered is not a absolute path.');
+    }
+
+    await io.cp(localePathResolved, uploadPathResolved, {
+      recursive: true,
+      force: true,
+    });
+
+    const options = { cwd: uploadPathResolved };
+
+    await exec.exec('export ', [`GITHUB_TOKEN=${token}`], options);
+
+    await exec.exec('git', ['config', 'user.name', '"Example"'], options);
+    await exec.exec(
+      'git',
+      ['config', 'user.email', '"you@example.com"'],
+      options,
+    );
+
+    await exec.exec('git', ['add', '.'], options);
+    await exec.exec('git', ['commit', '-m', '"Upload Translates"'], options);
+    await exec.exec('git', ['push'], options);
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
   }
-
-  const repository = core.getInput('repository');
-  const localePath = core.getInput('locale-path');
-  const uploadPath = core.getInput('upload-path');
-
-  const [owner, repo] = repository.split(/\//g);
-  const repositoryName = repo || owner;
-
-  const localePathResolved = resolvePath(
-    DIR_PATH,
-    repositoryName,
-    repositoryName,
-    localePath,
-  );
-
-  if (!isDirectory(localePathResolved)) {
-    throw new Error('The locale path entered is not a absolute path.');
-  }
-
-  const { clonePath } = await cloneTranslationRepository();
-  const uploadPathResolved = resolvePath(clonePath, uploadPath);
-
-  if (!isDirectory(uploadPathResolved)) {
-    throw new Error('The upload path entered is not a absolute path.');
-  }
-
-  await io.cp(localePathResolved, uploadPathResolved, {
-    recursive: true,
-    force: true,
-  });
-
-  const options = { cwd: uploadPathResolved };
-
-  // await exec.exec(
-  //   'ssh-keygen',
-  //   ['-t rsa', '-b', '4096', '-C "your_email@example.com'],
-  //   options,
-  // );
-
-  await exec.exec('export ', [`GITHUB_TOKEN=${token}`], options);
-
-  await exec.exec('git', ['config', 'user.name', '"Example"'], options);
-  await exec.exec(
-    'git',
-    ['config', 'user.email', '"you@example.com"'],
-    options,
-  );
-
-  await exec.exec('git', ['add', '.'], options);
-  await exec.exec('git', ['commit', '-m', '"Upload Translates"'], options);
-  await exec.exec('git', ['push'], options);
 }
 
 run();
