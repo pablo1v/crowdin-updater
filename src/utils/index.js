@@ -19,5 +19,4 @@ module.exports = {
   isDirectory,
   validateDir,
   validateFile,
-  addSSHKey,
 };

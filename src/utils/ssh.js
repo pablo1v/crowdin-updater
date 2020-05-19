@@ -1,12 +1,11 @@
 const NodeSSH = require('node-ssh');
 const { join } = require('path');
+const { writeFileSync } = require('fs');
 
-const { validateDir } = require('.');
-
-const { HOME } = process.env;
+const { validateDir, validateFile } = require('.');
 
 function addSSHKey(key) {
-  const sshDir = join(HOME || __dirname, '.ssh');
+  const sshDir = join(process.env.HOME || __dirname, '.ssh');
   const filePath = join(sshDir, 'deploy_key.pub');
 
   validateDir(sshDir);
