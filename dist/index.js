@@ -1871,7 +1871,14 @@ async function run() {
   //   options,
   // );
 
-  await exec.exec('git', ['status'], options);
+  await exec.exec('git', ['config', 'user.name', '"Example"'], options);
+  await exec.exec(
+    'git',
+    ['config', 'user.email', '"you@example.com"'],
+    options,
+  );
+
+  await exec.exec('git', ['add', '.'], options);
   await exec.exec('git', ['commit', '-m', '"Upload Translates"'], options);
   await exec.exec('git', ['push'], options);
 }
