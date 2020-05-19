@@ -6,13 +6,15 @@ inputs:
     default: ${{ github.repository }}
   token:
     description: Personal access token (PAT) used to fetch the repository.
-    default: ${{ github.token }}
+    required: true
   locale-path:
-    description: SSH key used to fetch the repository.
-    default: src/locales/base
+    description: Path.
+    required: true
+  upload-path:
+    description: Path.
+    required: true
   ssh-key:
     description: SSH key used to fetch the repository.
 runs:
   using: node12
   main: dist/index.js
-  # post: src/index.js

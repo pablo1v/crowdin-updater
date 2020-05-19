@@ -4,6 +4,7 @@ const path = require('path');
 const { DIR_PATH } = require('./Constants');
 
 const resolvePath = (...paths) => path.resolve(...paths);
+const isDirectory = path => fs.lstatSync(path).isDirectory();
 
 function readdirFiles(repositoryName, localePath) {
   const directoryPath = resolvePath(
@@ -29,5 +30,6 @@ function readdirFiles(repositoryName, localePath) {
 
 module.exports = {
   resolvePath,
+  isDirectory,
   readdirFiles,
 };
