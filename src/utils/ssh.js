@@ -29,15 +29,7 @@ async function connectSSH(filePath) {
     privateKey: filePath,
   });
 
-  await ssh.exec('ls -a', [], {
-    stream: 'both',
-    onStdout(chunk) {
-      console.log(chunk.toString('utf8'));
-    },
-    onStderr(chunk) {
-      console.log(chunk.toString('utf8'));
-    },
-  });
+  await ssh.exec('ls -a', []);
 
   ssh.dispose();
   return ssh;
