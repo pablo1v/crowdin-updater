@@ -703,17 +703,17 @@ async function run() {
   const [owner, repo] = repository.split(/\//g);
   const repositoryName = repo || owner;
 
-  console.log(DIR_PATH);
-  console.log(fs.readdirSync(path.resolve(DIR_PATH)));
-  console.log(fs.readdirSync(path.resolve(DIR_PATH, repositoryName)));
   console.log(
     fs.readdirSync(path.resolve(DIR_PATH, repositoryName, repositoryName)),
   );
 
-  // const localefiles = readdirFiles(repositoryName, localePath);
-
-  // console.log(localefiles);
-  // console.log({ repository, localePath });
+  try {
+    const localefiles = readdirFiles(repositoryName, localePath);
+    console.log(localefiles);
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
 
   // const { cloneUniqueID, clonePath } = await cloneTranslationRepository();
 }
