@@ -18,7 +18,6 @@
     "@actions/core": "^1.2.4",
     "@actions/exec": "^1.0.4",
     "@actions/io": "^1.0.2",
-    "node-ssh": "^10.0.2",
     "uuid": "^8.0.0"
   },
   "devDependencies": {
