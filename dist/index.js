@@ -2097,15 +2097,16 @@ exports.default = _default;
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const path = __webpack_require__(622);
+const exec = __webpack_require__(986);
 const { v4: uuid } = __webpack_require__(62);
-const { execSync } = __webpack_require__(129);
 
 async function cloneTranslationRepository() {
   const cloneUniqueID = uuid();
   const clonePath = path.resolve(__dirname, '..', cloneUniqueID);
 
-  await execSync(
-    `git clone https://github.com/Kaeltec/localization.git ${clonePath}`,
+  await exec.exec(
+    'git',
+    ['clone', 'git@github.com:Kaeltec/localization.git', clonePath],
     {
       cwd: path.resolve(__dirname, '..'),
     },
