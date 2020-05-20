@@ -3,44 +3,54 @@ const exec = require('@actions/exec');
 const core = require('@actions/core');
 
 const cloneRepository = require('./clone');
-const { DIR_PATH } = require('./utils/constants');
-const { isDirectory, resolvePath } = require('./utils');
+const { isDirectory, resolvePath, getTranslateFiles } = require('./utils');
+
+const { GITHUB_WORKSPACE } = process.env;
 
 async function run() {
   try {
-    ['locale-path', 'upload-path'].forEach(input => {
+    ['target-repository', 'locales-path', 'upload-path'].forEach(input => {
       if (!core.getInput(input)) throw new Error(`No ${input} was provided.`);
     });
 
-    const repository = core.getInput('repository');
+    const targetRepository = core.getInput('target-repository');
     const localePath = core.getInput('locale-path');
     const uploadPath = core.getInput('upload-path');
 
-    const [owner, repo] = repository.split(/\//g);
-    const repositoryName = repo || owner;
+    const localePathResolved = resolvePath(GITHUB_WORKSPACE, localePath);
 
-    const localePathResolved = resolvePath(
-      DIR_PATH,
-      repositoryName,
-      repositoryName,
-      localePath,
-    );
+    console.log({ localePathResolved });
 
     if (!isDirectory(localePathResolved)) {
       throw new Error('The locale path entered is not a absolute path.');
     }
 
-    const { clonePath } = await cloneRepository();
+    const { clonePath } = await cloneRepository(targetRepository);
     const uploadPathResolved = resolvePath(clonePath, uploadPath);
 
     if (!isDirectory(uploadPathResolved)) {
       throw new Error('The upload path entered is not a absolute path.');
     }
 
-    await io.cp(localePathResolved, uploadPathResolved, {
-      recursive: true,
-      force: true,
-    });
+    const localeFiles = getTranslateFiles(localePathResolved);
+
+    await Promise.all(
+      localeFiles.map(file => {
+        return io.cp(
+          file,
+          file.replace(localePathResolved, uploadPathResolved),
+          {
+            recursive: true,
+            force: true,
+          },
+        );
+      }),
+    );
+
+    // await io.cp(localePathResolved, uploadPathResolved, {
+    //   recursive: true,
+    //   force: true,
+    // });
 
     const options = { cwd: uploadPathResolved };
 

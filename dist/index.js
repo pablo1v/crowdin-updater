@@ -1116,7 +1116,13 @@ function _default(name, version, hashfunc) {
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 const { resolve } = __webpack_require__(622);
-const { lstatSync, existsSync, mkdirSync, writeFileSync } = __webpack_require__(747);
+const {
+  lstatSync,
+  existsSync,
+  mkdirSync,
+  writeFileSync,
+  readdirSync,
+} = __webpack_require__(747);
 
 const resolvePath = (...paths) => resolve(...paths);
 const isDirectory = path => lstatSync(path).isDirectory();
@@ -1131,11 +1137,34 @@ function validateFile(filePath) {
   }
 }
 
+function getTranslateFiles(directory, filter = 'json') {
+  console.log(directory);
+  const files = readdirSync(directory);
+
+  return files
+    .map(file => {
+      const fileFullPath = resolvePath(directory, file);
+
+      if (isDirectory(fileFullPath)) {
+        return getTranslateFiles(fileFullPath);
+      }
+
+      if (new RegExp(`.${filter}$`).test(file)) {
+        return fileFullPath;
+      }
+
+      return false;
+    })
+    .filter(file => file)
+    .reduce((allFiles, file) => allFiles.concat(file), []);
+}
+
 module.exports = {
   resolvePath,
   isDirectory,
   validateDir,
   validateFile,
+  getTranslateFiles,
 };
 
 
@@ -1168,18 +1197,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const v5 = (0, _v.default)('v5', 0x50, _sha.default);
 var _default = v5;
 exports.default = _default;
-
-/***/ }),
-
-/***/ 387:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const { resolve } = __webpack_require__(622);
-
-module.exports = {
-  DIR_PATH: resolve(__dirname, '..', '..', '..', '..', '..'),
-};
-
 
 /***/ }),
 
@@ -1812,44 +1829,54 @@ const exec = __webpack_require__(986);
 const core = __webpack_require__(470);
 
 const cloneRepository = __webpack_require__(944);
-const { DIR_PATH } = __webpack_require__(387);
-const { isDirectory, resolvePath } = __webpack_require__(353);
+const { isDirectory, resolvePath, getTranslateFiles } = __webpack_require__(353);
+
+const { GITHUB_WORKSPACE } = process.env;
 
 async function run() {
   try {
-    ['locale-path', 'upload-path'].forEach(input => {
+    ['target-repository', 'locales-path', 'upload-path'].forEach(input => {
       if (!core.getInput(input)) throw new Error(`No ${input} was provided.`);
     });
 
-    const repository = core.getInput('repository');
+    const targetRepository = core.getInput('target-repository');
     const localePath = core.getInput('locale-path');
     const uploadPath = core.getInput('upload-path');
 
-    const [owner, repo] = repository.split(/\//g);
-    const repositoryName = repo || owner;
+    const localePathResolved = resolvePath(GITHUB_WORKSPACE, localePath);
 
-    const localePathResolved = resolvePath(
-      DIR_PATH,
-      repositoryName,
-      repositoryName,
-      localePath,
-    );
+    console.log({ localePathResolved });
 
     if (!isDirectory(localePathResolved)) {
       throw new Error('The locale path entered is not a absolute path.');
     }
 
-    const { clonePath } = await cloneRepository();
+    const { clonePath } = await cloneRepository(targetRepository);
     const uploadPathResolved = resolvePath(clonePath, uploadPath);
 
     if (!isDirectory(uploadPathResolved)) {
       throw new Error('The upload path entered is not a absolute path.');
     }
 
-    await io.cp(localePathResolved, uploadPathResolved, {
-      recursive: true,
-      force: true,
-    });
+    const localeFiles = getTranslateFiles(localePathResolved);
+
+    await Promise.all(
+      localeFiles.map(file => {
+        return io.cp(
+          file,
+          file.replace(localePathResolved, uploadPathResolved),
+          {
+            recursive: true,
+            force: true,
+          },
+        );
+      }),
+    );
+
+    // await io.cp(localePathResolved, uploadPathResolved, {
+    //   recursive: true,
+    //   force: true,
+    // });
 
     const options = { cwd: uploadPathResolved };
 
