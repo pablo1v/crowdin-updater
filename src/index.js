@@ -64,7 +64,6 @@ async function run() {
       await exec.exec('git', ['push'], options);
     } catch (e) {
       // Not Exit Process
-      console.error(e);
     }
   } catch (e) {
     console.error(e);
