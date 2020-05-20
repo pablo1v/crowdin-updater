@@ -34,6 +34,8 @@ async function run() {
 
     const localeFiles = getTranslateFiles(localePathResolved);
 
+    console.log({ localeFiles });
+
     await Promise.all(
       localeFiles.map(file => {
         return io.cp(
