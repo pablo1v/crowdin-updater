@@ -1,18 +1,21 @@
-name: Kael Crowdin Action
-description: An action that updates the translation repository based on the changes made to the Bot.
+name: Crowdin Action
+description: An action that updates another repository based on modifications to the current one.
 inputs:
-  repository:
-    description: Repository name with owner.
-    default: ${{ github.repository }}
-  locales-path:
-    description: Path.
+  locale-path:
+    description: Directory where translations are.
     required: true
   upload-path:
-    description: Path.
+    description: Directory where the translations will be copied.
     required: true
-  token:
-    description: Personal access token.
+  target-repository:
+    description: Github repository that new translations will be sent.
     required: true
+  user-name:
+    description: Name that will be linked to the commit.
+    default: TranslateAction
+  user-email:
+    description: Email that will be linked to the commit.
+    default: translate@action.github
 runs:
   using: node12
   main: dist/index.js

@@ -21,7 +21,6 @@ function validateFile(filePath) {
 }
 
 function getTranslateFiles(directory, filter = 'json') {
-  console.log(directory);
   const files = readdirSync(directory);
 
   return files

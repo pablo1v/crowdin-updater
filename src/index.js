@@ -9,17 +9,23 @@ const { GITHUB_WORKSPACE } = process.env;
 
 async function run() {
   try {
-    ['target-repository', 'locale-path', 'upload-path'].forEach(input => {
+    [
+      'locale-path',
+      'upload-path',
+      'target-repository',
+      'user-name',
+      'user-email',
+    ].forEach(input => {
       if (!core.getInput(input)) throw new Error(`No ${input} was provided.`);
     });
 
+    const userName = core.getInput('user-name');
+    const userEmail = core.getInput('user-email');
     const localePath = core.getInput('locale-path');
     const uploadPath = core.getInput('upload-path');
     const targetRepository = core.getInput('target-repository');
 
     const localePathResolved = resolvePath(GITHUB_WORKSPACE, localePath);
-
-    console.log({ localePathResolved });
 
     if (!isDirectory(localePathResolved)) {
       throw new Error('The locale path entered is not a absolute path.');
@@ -34,8 +40,6 @@ async function run() {
 
     const localeFiles = getTranslateFiles(localePathResolved);
 
-    console.log({ localeFiles });
-
     await Promise.all(
       localeFiles.map(file => {
         return io.cp(
@@ -49,19 +53,10 @@ async function run() {
       }),
     );
 
-    // await io.cp(localePathResolved, uploadPathResolved, {
-    //   recursive: true,
-    //   force: true,
-    // });
-
     const options = { cwd: uploadPathResolved };
 
-    await exec.exec('git', ['config', 'user.name', '"Example"'], options);
-    await exec.exec(
-      'git',
-      ['config', 'user.email', '"you@example.com"'],
-      options,
-    );
+    await exec.exec('git', ['config', 'user.name', `"${userName}"`], options);
+    await exec.exec('git', ['config', 'user.email', `"${userEmail}"`], options);
 
     await exec.exec('git', ['add', '.'], options);
     await exec.exec('git', ['commit', '-m', '"Upload Translates"'], options);
