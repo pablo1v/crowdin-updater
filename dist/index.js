@@ -1865,6 +1865,8 @@ async function run() {
 
     const localeFiles = getTranslateFiles(localePathResolved);
 
+    console.log({ localeFiles });
+
     await Promise.all(
       localeFiles.map(file => {
         return io.cp(
@@ -1892,7 +1894,7 @@ async function run() {
     await exec.exec('git', ['commit', '-m', '"Upload Translates"'], options);
     await exec.exec('git', ['push'], options);
   } catch (e) {
-    // Silent
+    console.error(e);
   }
 }
 
