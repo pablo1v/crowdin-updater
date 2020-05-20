@@ -1885,10 +1885,15 @@ async function run() {
 
     await exec.exec('git', ['add', '.'], options);
     await exec.exec('git', ['commit', '-m', '"Upload Translates"'], options);
-    await exec.exec('git', ['push'], options);
   } catch (e) {
     console.error(e);
     process.exit(1);
+  }
+
+  try {
+    await exec.exec('git', ['push'], options);
+  } catch (e) {
+    // Silent
   }
 }
 
