@@ -1835,13 +1835,13 @@ const { GITHUB_WORKSPACE } = process.env;
 
 async function run() {
   try {
-    ['target-repository', 'locales-path', 'upload-path'].forEach(input => {
+    ['target-repository', 'locale-path', 'upload-path'].forEach(input => {
       if (!core.getInput(input)) throw new Error(`No ${input} was provided.`);
     });
 
-    const targetRepository = core.getInput('target-repository');
     const localePath = core.getInput('locale-path');
     const uploadPath = core.getInput('upload-path');
+    const targetRepository = core.getInput('target-repository');
 
     const localePathResolved = resolvePath(GITHUB_WORKSPACE, localePath);
 
