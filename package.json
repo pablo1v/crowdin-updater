@@ -21,7 +21,7 @@
     "uuid": "^8.1.0"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.22.2",
+    "@zeit/ncc": "^0.22.3",
     "eslint": "^7.0.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-config-prettier": "^6.11.0",
