@@ -1903,10 +1903,7 @@ async function run() {
     ]);
 
     try {
-      await Promise.all([
-        exec('commit', '-m', `"${commitMessage}"`),
-        exec('push'),
-      ]);
+      await Promise.all([exec('commit', '-m', commitMessage), exec('push')]);
     } catch (e) {
       // Not Exit Process
     }
