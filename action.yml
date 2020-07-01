@@ -1,6 +1,9 @@
 name: Crowdin Action
 description: An action that updates another repository based on modifications to the current one.
 inputs:
+  commit-message:
+    description: Message that will be linked to the commit.
+    default: Upload Translates
   locale-path:
     description: Directory where translations are.
     required: true
