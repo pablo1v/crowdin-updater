@@ -1,4 +1,4 @@
-name: crowdin-updater
+name: Crowdin Updater
 description: An action that updates another repository based on modifications to the current one.
 inputs:
   commit-message:
