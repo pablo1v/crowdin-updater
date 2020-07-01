@@ -1,6 +1,6 @@
-const io = require('@actions/io');
-const exec = require('@actions/exec');
-const core = require('@actions/core');
+const ioAction = require('@actions/io');
+const execAction = require('@actions/exec');
+const coreAction = require('@actions/core');
 
 const cloneRepository = require('./clone');
 const { isDirectory, resolvePath, getTranslateFiles } = require('./utils');
@@ -16,14 +16,17 @@ async function run() {
       'user-name',
       'user-email',
     ].forEach(input => {
-      if (!core.getInput(input)) throw new Error(`No ${input} was provided.`);
+      if (!coreAction.getInput(input)) {
+        throw new Error(`No ${input} was provided.`);
+      }
     });
 
-    const userName = core.getInput('user-name');
-    const userEmail = core.getInput('user-email');
-    const localePath = core.getInput('locale-path');
-    const uploadPath = core.getInput('upload-path');
-    const targetRepository = core.getInput('target-repository');
+    const userName = coreAction.getInput('user-name');
+    const userEmail = coreAction.getInput('user-email');
+    const localePath = coreAction.getInput('locale-path');
+    const uploadPath = coreAction.getInput('upload-path');
+    const commitMessage = coreAction.getInput('commit-message');
+    const targetRepository = coreAction.getInput('target-repository');
 
     const localePathResolved = resolvePath(GITHUB_WORKSPACE, localePath);
 
@@ -42,26 +45,31 @@ async function run() {
 
     await Promise.all(
       localeFiles.map(file => {
-        return io.cp(
+        return ioAction.cp(
           file,
           file.replace(localePathResolved, uploadPathResolved),
           {
-            recursive: true,
             force: true,
+            recursive: true,
           },
         );
       }),
     );
 
     const options = { cwd: uploadPathResolved };
+    const exec = args => execAction.exec('git', args, options);
 
-    await exec.exec('git', ['config', 'user.name', `"${userName}"`], options);
-    await exec.exec('git', ['config', 'user.email', `"${userEmail}"`], options);
-    await exec.exec('git', ['add', '.'], options);
+    await Promise.all(
+      exec(['config', 'user.name', `"${userName}"`]),
+      exec(['config', 'user.email', `"${userEmail}"`]),
+      exec(['add', '.']),
+    );
 
     try {
-      await exec.exec('git', ['commit', '-m', '"Upload Translates"'], options);
-      await exec.exec('git', ['push'], options);
+      await Promise.all(
+        exec(['commit', '-m', `"${commitMessage}"`]),
+        exec(['push']),
+      );
     } catch (e) {
       // Not Exit Process
     }
