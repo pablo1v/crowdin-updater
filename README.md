@@ -1,4 +1,4 @@
-# crowdin-action
+# crowdin-updater
 
 A flexible action that updates another repository based on current modifications.
 
@@ -22,7 +22,7 @@ As stated above, this action does not merge an SSH key to perform required actio
   with:
     ssh-private-key: ${{ secrets.SSH_TOKEN }}
 
-- uses: pablo1v/crowdin-action@master
+- uses: pablo1v/crowdin-updater@master
   with:
     # Repository to which updates will be sent
     # Use SSH Link for private repository
@@ -52,4 +52,4 @@ As stated above, this action does not merge an SSH key to perform required actio
 
 ## License
 
-AGPL 3.0 - Check [License File](https://github.com/pablo1v/crowdin-action/blob/master/LICENSE)
+AGPL 3.0 - Check [License File](https://github.com/pablo1v/crowdin-updater/blob/master/LICENSE)
