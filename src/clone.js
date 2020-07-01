@@ -11,8 +11,8 @@ async function cloneRepository(repository) {
   });
 
   return {
-    cloneUniqueID,
     clonePath,
+    cloneUniqueID,
   };
 }
 
