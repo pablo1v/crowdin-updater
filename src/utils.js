@@ -13,10 +13,7 @@ const validateDir = directory => !existsSync(directory) && mkdirSync(directory);
 
 function validateFile(filePath) {
   if (!existsSync(filePath)) {
-    writeFileSync(filePath, '', {
-      encoding: 'utf8',
-      mode: 0o600,
-    });
+    writeFileSync(filePath, '', { encoding: 'utf8', mode: 0o600 });
   }
 }
 
@@ -38,7 +35,7 @@ function getTranslateFiles(directory, filter = 'json') {
       return false;
     })
     .filter(file => file)
-    .reduce((allFiles, file) => allFiles.concat(file), []);
+    .flatMap(file => file);
 }
 
 module.exports = {
