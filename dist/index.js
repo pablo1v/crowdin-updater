@@ -1894,19 +1894,19 @@ async function run() {
     );
 
     const options = { cwd: uploadPathResolved };
-    const exec = args => execAction.exec('git', args, options);
+    const exec = (...args) => execAction.exec('git', args, options);
 
-    await Promise.all(
-      exec(['config', 'user.name', `"${userName}"`]),
-      exec(['config', 'user.email', `"${userEmail}"`]),
-      exec(['add', '.']),
-    );
+    await Promise.all([
+      exec('config', 'user.name', `"${userName}"`),
+      exec('config', 'user.email', `"${userEmail}"`),
+      exec('add', '.'),
+    ]);
 
     try {
-      await Promise.all(
-        exec(['commit', '-m', `"${commitMessage}"`]),
-        exec(['push']),
-      );
+      await Promise.all([
+        exec('commit', '-m', `"${commitMessage}"`),
+        exec('push'),
+      ]);
     } catch (e) {
       // Not Exit Process
     }
