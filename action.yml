@@ -19,6 +19,9 @@ inputs:
   user-email:
     description: Email that will be linked to the commit.
     default: translate@action.github
+branding:
+  icon: 'archive'
+  color: 'gray-dark'
 runs:
   using: node12
   main: dist/index.js
