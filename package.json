@@ -5,10 +5,10 @@
   "main": "src/index.js",
   "scripts": {
     "build": "ncc build",
-    "lint": "eslint src --ext js",
-    "lint:fix": "eslint src --ext js --fix",
-    "prettier": "prettier --check src/**/*.js",
-    "prettier:fix": "prettier --write src/**/*.js"
+    "lint": "eslint ./ --ext js",
+    "lint:fix": "eslint ./ --ext js --fix",
+    "prettier": "prettier --check ./**/*.js",
+    "prettier:fix": "prettier --write ./**/*.js"
   },
   "repository": {
     "type": "git",
