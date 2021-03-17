@@ -1,7 +1,7 @@
 {
   "name": "crowdin-updater",
   "version": "1.0.0",
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "main": "src/index.js",
   "scripts": {
     "build": "ncc build",
