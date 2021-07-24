@@ -52,4 +52,4 @@ As stated above, this action does not merge an SSH key to perform required actio
 
 ## License
 
-AGPL 3.0 - Check [License File](https://github.com/pablo1v/crowdin-updater/blob/master/LICENSE)
+MIT - Check [License File](https://github.com/pablo1v/crowdin-updater/blob/main/LICENSE)
